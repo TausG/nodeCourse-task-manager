@@ -10,52 +10,30 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true, useUnifiedTopology: 
 
     const db = client.db(databaseName);
 
-    // db.collection('users').findOne({ _id: new ObjectID("5dcc2b9f11150312b0b30bfb") }, (error, user) => {
-    //     if (error) {
-    //         return console.log('Unable');
-    //     }
-
-    //     console.log(user);        
-    // });
-
-    // db.collection('users').find({ name: 'Taus' }).toArray((error, users) => {
-    //     console.log(users);
-    // });
-
-    // db.collection('users').find({ name: 'Taus' }).count((error, count) => {
-    //     console.log(count);
-    // });
-
-    db.collection('tasks').find({  }).toArray((error, tasks) => {
-        if (error) {
-            return console.log(error);
+    // db.collection('users').updateOne({
+    //         _id: new ObjectID("5dcc297998f84429c8774737")
+    //     }, {
+    //         $inc: {
+    //             age: 1
+    //         }
+    //     })
+    //     .then((result) => {
+    //         console.log(result);
+    //     })
+    //     .catch((error) => {
+    //         console.log(error);
+    //     })
+    
+    db.collection('tasks').updateMany({
+        completed: false
+    }, {
+        $set: {
+            completed: true
         }
+    }).then((result) => {
+        console.log(result);
+    }).catch((error) => {
+        console.log(error);
+    })
 
-        if (tasks.length === 0) {
-            return console.log('No tasks in DB');
-        }
-
-        const taskId = tasks[tasks.length-1]._id;
-        
-        db.collection('tasks').findOne({ _id: new ObjectID(taskId) }, (error, task) => {
-            if (error) {
-                return console.log(error);
-            }
-
-            console.log(task);
-        });
-    });
-
-    db.collection('tasks').find({ completed: false }).toArray((error, tasks) => {
-        if (error) {
-            return console.log(error);
-        }
-
-        if (tasks.length === 0) {
-            return console.log('No tasks in DB');
-        }
-
-        console.log(tasks)
-
-    });
 });
