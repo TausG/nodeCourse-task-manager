@@ -42,7 +42,43 @@ app.get('/users/:id', async (req, res) => {
     } catch (error) {
         res.status(500).send(error);
     }
-})
+});
+
+app.patch('/users/:id', async (req, res) => {
+    const updatesAllowed = ['name', 'age', 'email'];
+    const updates = Object.keys(req.body);
+    const isUpdatesAllowed = updates.every((update) => updatesAllowed.includes(update));
+
+    if (!isUpdatesAllowed) {
+        return res.status(400).send({ error: 'unknow updates' });
+    }
+
+    try {
+      const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+
+        if (!user) {
+            return res.status(404).send();
+        }
+
+        res.send(user);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+});
+
+app.delete('/users/:id', async (req, res) => {
+    try {
+        const user = await User.findByIdAndDelete(req.params.id);
+
+        if (!user) {
+            return res.status(404).send();
+        }
+    
+        res.send(user);
+    } catch (error) {
+        res.status(500).send();
+    }
+});
 
 app.post('/tasks', async (req, res) => {
     const task = new Task(req.body);
@@ -77,6 +113,43 @@ app.get('/tasks/:id', async (req, res) => {
         res.send(task);
     } catch (error) {
         res.status(500).send(error);
+    }
+});
+
+app.patch('/tasks/:id', async (req, res) => {
+    const allowedUpdates = ['completed'];
+    const updates = Object.keys(req.body);
+    const isUpdatesAllowed = updates.every((update) => allowedUpdates.includes(update));
+
+    if (!isUpdatesAllowed) {
+        return res.status(400).send({ error: 'unknow updates' })
+    }
+
+    try {
+        const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+
+        if (!task) {
+            return res.status(404).send();
+        }
+
+        res.send(task);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+
+});
+
+app.delete('/tasks/:id', async (req, res) => {
+    try {
+        const task = await Task.findByIdAndDelete(req.params.id);
+
+        if (!task) {
+            return res.status(404).send();
+        }
+
+        res.send(task);
+    } catch (error) {
+        res.status(500).send();
     }
 });
 
