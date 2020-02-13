@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Task = mongoose.model('Task', {
+const taskSchema = new mongoose.Schema({
     description: {
         type: String,
         required: true,
@@ -13,15 +13,6 @@ const Task = mongoose.model('Task', {
     }
 });
 
-// const aTask = new Task({
-//     description: 'Learn Mongoose',
-//     completed:  false
-// });
-
-// aTask.save().then((aTask) => {
-//     console.log(aTask);
-// }).catch((error) => {
-//     console.log('Error', error);
-// });
+const Task = mongoose.model('Task', taskSchema);
 
 module.exports = Task;
